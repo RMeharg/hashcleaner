@@ -11,6 +11,18 @@ describe 'Hash Cleaner' do
         "configurable": true,
         "value": "apps.example.com"
       },
+      ".optional": {
+        "credential": false,
+        "configurable": true,
+        "optional": true,
+        "value": null
+      },
+      ".not-optional": {
+        "credential": false,
+        "configurable": true,
+        "optional": false,
+        "value": null
+      },
       ".not-configurable": {
         "credential": false,
         "configurable": false,
@@ -53,6 +65,16 @@ EoJ
   context 'objects that are not configurable' do
     it 'removes it from the result' do
       expect(processed_secret).not_to have_key(".not-configurable")
+    end
+  end
+
+  context 'optional fields' do
+    it 'removes the non-optional fields with null values' do
+      expect(processed_secret).not_to have_key(".not-optional")
+    end
+
+    it 'dont touch the optional fields with null values' do
+      expect(processed_secret).to have_key(".optional")
     end
   end
 end
