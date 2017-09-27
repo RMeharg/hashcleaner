@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'hashcleaner'
+
+if ARGV[0].nil? then
+  puts "Usage: yamlcleaner /path/to/file.yml"
+  exit 1
+end
+puts HashCleaner.clean(YAML.load_file(ARGV[0])).to_yaml
+
