@@ -23,6 +23,12 @@ describe 'Hash Cleaner' do
         "optional": false,
         "value": null
       },
+      ".not-optional-but-set": {
+        "credential": false,
+        "configurable": true,
+        "optional": false,
+        "value": "123"
+      },
       ".not-configurable": {
         "credential": false,
         "configurable": false,
@@ -71,6 +77,10 @@ EoJ
   context 'optional fields' do
     it 'removes the non-optional fields with null values' do
       expect(processed_secret).not_to have_key(".not-optional")
+    end
+
+    it 'dont touch the required fields with non-null values' do
+      expect(processed_secret).to have_key(".not-optional-but-set")
     end
 
     it 'dont touch the optional fields with null values' do
