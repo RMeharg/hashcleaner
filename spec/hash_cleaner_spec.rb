@@ -48,7 +48,31 @@ describe 'Hash Cleaner' do
           "somefield": "somevalue",
           "secret": "***"
         }
-      }
+      },
+      ".collection": {
+        "type": "collection",
+        "configurable": true,
+        "credential": false,
+        "optional": true,
+        "value": [
+          {
+            "guid": {
+              "type": "uuid",
+              "configurable": false,
+              "credential": false,
+              "value": "some-guid",
+              "optional": false
+            },
+            "href": {
+              "type": "string",
+              "configurable": false,
+              "credential": false,
+              "value": "some-url",
+              "optional": false
+            }
+          }
+        ]
+      },
     }
 EoJ
   }
@@ -85,6 +109,15 @@ EoJ
 
     it 'dont touch the optional fields with null values' do
       expect(processed_secret).to have_key(".optional")
+    end
+  end
+
+  context 'collections' do
+    it 'flats out the value array' do
+      expect(processed_secret).to have_key(".collection")
+      collection = processed_secret['.collection']
+      expect(collection['value'].first['guid']).to eq("some-guid")
+      expect(collection['value'].first['href']).to eq("some-url")
     end
   end
 end

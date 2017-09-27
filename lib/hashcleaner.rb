@@ -1,6 +1,6 @@
 module HashCleaner
   def self.clean(config)
-    config.reject do |key, element|
+    flat(config).reject do |key, element|
       is_redacted_credential(element) ||
       is_not_configurable(element) ||
       is_required_and_not_set(element)
@@ -18,6 +18,18 @@ module HashCleaner
 
   def self.is_required_and_not_set(element)
     !element['optional'] && element['value'].nil?
+  end
+
+  def self.flat(c)
+    c.each do |_, element|
+      if element['type'] == 'collection' then
+        element['value'].each do |v|
+          v.keys.each do |key|
+            v[key] = v[key]['value']
+          end
+        end
+      end
+    end
   end
 end
 
